@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0E1D26" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#182630" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#1741B0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1B3C8F" media="(prefers-color-scheme: dark)">
 <title>Convertisseur d’unités</title>
 <style>
 :root {
@@ -19,13 +19,13 @@
   --tint2: #CFDCFF;
   --warn: #8A5200;
   --bad: #B3261E;
-  --band: #0E1D26;
-  --band-ink: #F2F6F8;
-  --band-muted: #A5B7C2;
-  --chip-line: rgba(242, 246, 248, 0.3);
-  --chip-on: #F2F6F8;
-  --chip-on-ink: #0E1D26;
-  --ruler: #0E1D26;
+  --band: #1741B0;
+  --band-ink: #FFFFFF;
+  --band-muted: #D5DDF1;
+  --chip-line: rgba(255, 255, 255, 0.42);
+  --chip-on: #FFFFFF;
+  --chip-on-ink: #1741B0;
+  --ruler: #1741B0;
   --font: Bahnschrift, "DIN Alternate", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
   color-scheme: light;
   box-sizing: border-box;
@@ -44,13 +44,13 @@
     --tint2: #2A4272;
     --warn: #E5A646;
     --bad: #FF8A80;
-    --band: #182630;
-    --band-ink: #E6EDF0;
-    --band-muted: #8EA1AB;
-    --chip-line: rgba(230, 237, 240, 0.28);
-    --chip-on: #E6EDF0;
-    --chip-on-ink: #0C1317;
-    --ruler: #4A606C;
+    --band: #1B3C8F;
+    --band-ink: #FFFFFF;
+    --band-muted: #CBD6F2;
+    --chip-line: rgba(255, 255, 255, 0.4);
+    --chip-on: #FFFFFF;
+    --chip-on-ink: #1B3C8F;
+    --ruler: #4A6FD0;
     color-scheme: dark;
   }
 }
@@ -66,13 +66,13 @@
   --tint2: #2A4272;
   --warn: #E5A646;
   --bad: #FF8A80;
-  --band: #182630;
-  --band-ink: #E6EDF0;
-  --band-muted: #8EA1AB;
-  --chip-line: rgba(230, 237, 240, 0.28);
-  --chip-on: #E6EDF0;
-  --chip-on-ink: #0C1317;
-  --ruler: #4A606C;
+  --band: #1B3C8F;
+  --band-ink: #FFFFFF;
+  --band-muted: #CBD6F2;
+  --chip-line: rgba(255, 255, 255, 0.4);
+  --chip-on: #FFFFFF;
+  --chip-on-ink: #1B3C8F;
+  --ruler: #4A6FD0;
   color-scheme: dark;
 }
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -111,6 +111,8 @@ h1 { margin: 0; font-size: clamp(1.4rem, 5.6vw, 2.2rem); line-height: 1.1; font-
 }
 .lang:focus-within { outline: 2px solid var(--band-ink); outline-offset: 2px; }
 .lang select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; font-size: 16px; cursor: pointer; }
+.lang select { color-scheme: light; color: #000; }
+.lang select option { color: #000; background: #fff; }
 
 .tabs {
   --fl: 0px;
@@ -301,12 +303,26 @@ h1 { margin: 0; font-size: clamp(1.4rem, 5.6vw, 2.2rem); line-height: 1.1; font-
 }
 .pill[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
 .foot { margin: 22px 2px 0; color: var(--muted); font-size: 0.85rem; max-width: 62ch; }
+.band-side { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.doc { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 6px; color: var(--band-muted); font-size: 0.88rem; text-decoration: underline; text-underline-offset: 3px; }
+.doc:hover { color: var(--band-ink); }
+.brand { min-width: 0; }
+h1 { font-size: clamp(1.3rem, 5.4vw, 2.2rem); overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; }
+.lang-code { display: none; font-weight: 600; letter-spacing: 0.03em; }
+@media (max-width: 479px) {
+  .lang-name { display: none; }
+  .lang-code { display: inline; }
+  .doc .fr { display: none; }
+}
 
 /* Grands écrans */
 @media (min-width: 700px) {
-  .line { display: grid; grid-template-columns: 1fr 1fr; }
-  .in-cell { border-right: 1px solid var(--line); }
-  .note { grid-column: 1 / -1; }
+  .line { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; background: transparent; border: 0; border-radius: 0; overflow: visible; }
+  .in-cell, .out-cell { min-height: 76px; border: 1px solid var(--line); border-radius: 14px; }
+  .in-cell { padding: 0 16px 0 8px; background: var(--surface); }
+  .out-cell { padding: 0 8px 0 16px; border-color: transparent; }
+  .line.bad .in-cell { border-color: var(--bad); }
+  .note { grid-column: 1 / -1; margin-top: -4px; padding: 0 4px; background: transparent; border-top: 0; }
   .copy .lbl { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
 }
 @media (min-width: 760px) {
@@ -326,9 +342,11 @@ h1 { margin: 0; font-size: clamp(1.4rem, 5.6vw, 2.2rem); line-height: 1.1; font-
           <h1 id="title">Convertisseur d’unités</h1>
           <p class="lede" id="lede">Choisissez une grandeur et deux unités, puis saisissez jusqu’à trois valeurs à convertir.</p>
         </div>
+        <div class="band-side">
         <label class="lang">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg>
           <span class="lang-name" id="langname">Français</span>
+          <span class="lang-code" id="langcode">FR</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           <span class="sr" id="langlabel">Langue</span>
           <select id="lang">
@@ -340,6 +358,11 @@ h1 { margin: 0; font-size: clamp(1.4rem, 5.6vw, 2.2rem); line-height: 1.1; font-
             <option value="sv">Svenska</option>
           </select>
         </label>
+        <a class="doc" id="readme" href="README.md" target="_blank" rel="noopener" hreflang="fr" title="Documentation (README, en français)" aria-label="Documentation (README, en français)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+          <span>README<span class="fr" id="readme-lang"> (FR)</span></span>
+        </a>
+        </div>
       </div>
       <div class="tabs" role="tablist" aria-label="Grandeur physique" id="tabs"></div>
     </div>
@@ -387,13 +410,16 @@ h1 { margin: 0; font-size: clamp(1.4rem, 5.6vw, 2.2rem); line-height: 1.1; font-
 "use strict";
 
 /* ---------- Données ---------- */
+/* README ouvert par le lien du bandeau : version française si la langue est le français, sinon version anglaise.
+   Remplacez par des URL complètes si les fichiers ne sont pas déposés à côté de la page. */
+const README_URL = { fr: "README.md", en: "README.en.md" };
 const PARSEC = 149597870700 * 648000 / Math.PI;
 const U = (id, name, sym, grp, use, f) => ({ id, name, sym, grp, use, f });
 const T = (id, name, sym, grp, use, toC, fromC, formula) => ({ id, name, sym, grp, use, toC, fromC, formula });
 
 const QUANTITIES = [
   {
-    key: "longueur", label: "Longueur", base: "m", from: "m", to: "ft",
+    key: "longueur", label: "Longueur", base: "m", from: "in", to: "cm",
     desc: "Unité SI : le mètre (m). Les unités anglo-saxonnes sont définies exactement à partir du mètre (1 in = 25,4 mm).",
     units: [
       U("nm", "nanomètre", "nm", "SI et multiples décimaux", "SI. Nanotechnologies, optique", 1e-9),
@@ -768,6 +794,7 @@ defLang("fr", {
     copy: "Copier",
     copied: "Copié",
     sign: "Changer le signe",
+    readme: "Documentation (README, en français)",
     copyFail: "Copie impossible",
     tagIn: "entrée",
     tagOut: "sortie",
@@ -800,6 +827,7 @@ defLang("en", {
     copy: "Copy",
     copied: "Copied",
     sign: "Toggle sign",
+    readme: "Documentation (README, in English)",
     copyFail: "Copy failed",
     tagIn: "input",
     tagOut: "output",
@@ -947,6 +975,7 @@ defLang("de", {
     copy: "Kopieren",
     copied: "Kopiert",
     sign: "Vorzeichen wechseln",
+    readme: "Dokumentation (README, auf Englisch)",
     copyFail: "Kopieren fehlgeschlagen",
     tagIn: "Eingabe",
     tagOut: "Ausgabe",
@@ -1095,6 +1124,7 @@ defLang("it", {
     copy: "Copia",
     copied: "Copiato",
     sign: "Cambia segno",
+    readme: "Documentazione (README, in inglese)",
     copyFail: "Copia non riuscita",
     tagIn: "ingresso",
     tagOut: "uscita",
@@ -1240,6 +1270,7 @@ defLang("es", {
     copy: "Copiar",
     copied: "Copiado",
     sign: "Cambiar signo",
+    readme: "Documentación (README, en inglés)",
     copyFail: "No se pudo copiar",
     tagIn: "entrada",
     tagOut: "salida",
@@ -1384,6 +1415,7 @@ defLang("sv", {
     copy: "Kopiera",
     copied: "Kopierat",
     sign: "Byt tecken",
+    readme: "Dokumentation (README, på engelska)",
     copyFail: "Kopieringen misslyckades",
     tagIn: "in",
     tagOut: "ut",
@@ -1518,6 +1550,7 @@ defLang("sv", {
 
 /* ---------- Utilitaires ---------- */
 let NF = new Intl.NumberFormat("fr-FR", { maximumSignificantDigits: 12 });
+let NF3 = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 3 });
 let DEC = ",";
 const NBSP = "\u00a0";
 
@@ -1527,6 +1560,18 @@ function fmtHTML(x) {
   const a = Math.abs(x);
   if (a >= 1e-4 && a < 1e12) return NF.format(x);
   let [m, e] = x.toExponential(11).split("e");
+  m = m.replace(/\.?0+$/, "").replace(".", DEC);
+  const n = parseInt(e, 10);
+  return m + NBSP + "×" + NBSP + "10<sup>" + (n < 0 ? "−" : "") + Math.abs(n) + "</sup>";
+}
+
+/* Résultats : 3 décimales au maximum (notation scientifique pour les très petites et très grandes valeurs) */
+function fmtResult(x) {
+  if (!isFinite(x)) return "—";
+  if (x === 0) return "0";
+  const a = Math.abs(x);
+  if (a >= 5e-4 && a < 1e12) return NF3.format(x);
+  let [m, e] = x.toExponential(3).split("e");
   m = m.replace(/\.?0+$/, "").replace(".", DEC);
   const n = parseInt(e, 10);
   return m + NBSP + "×" + NBSP + "10<sup>" + (n < 0 ? "−" : "") + Math.abs(n) + "</sup>";
@@ -1547,7 +1592,9 @@ function parseValue(s) {
 }
 
 function plain(x) {
-  return String(Number(x.toPrecision(12))).replace(".", DEC);
+  const a = Math.abs(x);
+  const v = (a === 0 || (a >= 5e-4 && a < 1e12)) ? Number(x.toFixed(3)) : Number(x.toExponential(3));
+  return String(v).replace(".", DEC);
 }
 
 function convert(q, from, to, v) {
@@ -1581,18 +1628,12 @@ function load() {
   try {
     const s = JSON.parse(localStorage.getItem(STORE) || "null");
     if (!s || typeof s !== "object") return;
-    if (QUANTITIES.some(q => q.key === s.q)) state.q = s.q;
     if (typeof s.lang === "string" && LANGS[s.lang]) state.lang = s.lang;
-    for (const q of QUANTITIES) {
-      const x = s.sel && s.sel[q.key];
-      if (x && q.units.some(u => u.id === x.from) && q.units.some(u => u.id === x.to)) {
-        state.sel[q.key] = { from: x.from, to: x.to };
-      }
-    }
+    /* La page s'ouvre toujours sur Longueur (in vers cm) : seule la langue est restauree. */
   } catch (e) { /* stockage indisponible : on garde les valeurs par défaut */ }
 }
 function save() {
-  try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { /* ignoré */ }
+  try { localStorage.setItem(STORE, JSON.stringify({ lang: state.lang })); } catch (e) { /* ignoré */ }
 }
 
 const cur = () => QUANTITIES.find(q => q.key === state.q);
@@ -1697,7 +1738,7 @@ const rows = [0, 1, 2].map(i => {
     copyLbl: el.querySelector(".copy .lbl"),
     value: null
   };
-  if (i === 0) r.input.value = "1";
+  r.input.value = String(i + 1);
   r.input.addEventListener("input", update);
   r.sign.addEventListener("click", () => {
     const v = r.input.value.trim();
@@ -1810,7 +1851,7 @@ function update() {
         r.note.textContent = ui("errRange");
       } else {
         r.value = res;
-        setOut(r, fmtHTML(res), false);
+        setOut(r, fmtResult(res), false);
         if (q.temp && from.toC(v) < -273.15 - 1e-9) {
           r.note.textContent = ui("errAbsZero");
         }
@@ -1871,6 +1912,7 @@ const selLang = $("#lang");
 
 function applyLang() {
   NF = new Intl.NumberFormat(LG().locale, { maximumSignificantDigits: 12 });
+  NF3 = new Intl.NumberFormat(LG().locale, { maximumFractionDigits: 3 });
   DEC = NF.formatToParts(1.1).find(p => p.type === "decimal").value;
   document.documentElement.lang = state.lang;
   document.title = ui("title");
@@ -1884,7 +1926,14 @@ function applyLang() {
   $("#swap").setAttribute("aria-label", ui("swap"));
   $("#swap").title = ui("swap");
   $("#langname").textContent = LG().name;
+  $("#langcode").textContent = state.lang.toUpperCase();
   $("#foot").textContent = ui("foot");
+  $("#readme").setAttribute("aria-label", ui("readme"));
+  $("#readme").title = ui("readme");
+  const rd = state.lang === "fr" ? "fr" : "en";
+  $("#readme").href = README_URL[rd];
+  $("#readme").hreflang = rd;
+  $("#readme-lang").textContent = " (" + rd.toUpperCase() + ")";
   tabBtns.forEach((b, i) => { b.textContent = qLabel(QUANTITIES[i]); });
   rows.forEach((r, i) => {
     r.input.setAttribute("aria-label", ui("valueN", { n: i + 1 }));
