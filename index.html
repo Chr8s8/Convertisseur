@@ -3,423 +3,320 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1741B0" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1B3C8F" media="(prefers-color-scheme: dark)">
 <title>Convertisseur d’unités</title>
 <style>
 :root {
-  --bg: #EAEFF2;
+  --bg: #E7ECEF;
   --surface: #FFFFFF;
-  --ink: #101E26;
-  --muted: #52656F;
-  --line: #CBD5DB;
+  --ink: #13222A;
+  --muted: #566871;
+  --line: #C3CED4;
   --accent: #1B4FD6;
-  --on-accent: #FFFFFF;
-  --tint: #E3EBFF;
-  --tint2: #CFDCFF;
+  --tint: #E4ECFF;
+  --tick: #7F929C;
   --warn: #8A5200;
   --bad: #B3261E;
-  --band: #1741B0;
-  --band-ink: #FFFFFF;
-  --band-muted: #D5DDF1;
-  --chip-line: rgba(255, 255, 255, 0.42);
-  --chip-on: #FFFFFF;
-  --chip-on-ink: #1741B0;
-  --ruler: #1741B0;
   --font: Bahnschrift, "DIN Alternate", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
   color-scheme: light;
   box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0C1317;
-    --surface: #151F26;
+    --bg: #0F161A;
+    --surface: #161F25;
     --ink: #E6EDF0;
     --muted: #97A8B1;
-    --line: #27363F;
+    --line: #2A3942;
     --accent: #8FB0FF;
-    --on-accent: #0C1317;
-    --tint: #1C2D4B;
-    --tint2: #2A4272;
+    --tint: #1E2E4D;
+    --tick: #51656F;
     --warn: #E5A646;
     --bad: #FF8A80;
-    --band: #1B3C8F;
-    --band-ink: #FFFFFF;
-    --band-muted: #CBD6F2;
-    --chip-line: rgba(255, 255, 255, 0.4);
-    --chip-on: #FFFFFF;
-    --chip-on-ink: #1B3C8F;
-    --ruler: #4A6FD0;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0C1317;
-  --surface: #151F26;
+  --bg: #0F161A;
+  --surface: #161F25;
   --ink: #E6EDF0;
   --muted: #97A8B1;
-  --line: #27363F;
+  --line: #2A3942;
   --accent: #8FB0FF;
-  --on-accent: #0C1317;
-  --tint: #1C2D4B;
-  --tint2: #2A4272;
+  --tint: #1E2E4D;
+  --tick: #51656F;
   --warn: #E5A646;
   --bad: #FF8A80;
-  --band: #1B3C8F;
-  --band-ink: #FFFFFF;
-  --band-muted: #CBD6F2;
-  --chip-line: rgba(255, 255, 255, 0.4);
-  --chip-on: #FFFFFF;
-  --chip-on-ink: #1B3C8F;
-  --ruler: #4A6FD0;
   color-scheme: dark;
 }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 *, *::before, *::after { box-sizing: inherit; }
 body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
   font: 400 1rem/1.5 var(--font);
-  -webkit-tap-highlight-color: transparent;
 }
-button, input, select { font: inherit; color: inherit; touch-action: manipulation; }
-button { cursor: pointer; }
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-/* Bandeau : titre, langue, grandeurs */
-.band { background: var(--band); color: var(--band-ink); padding-top: env(safe-area-inset-top, 0px); }
-.band-in { max-width: 720px; margin: 0 auto; padding: 18px 16px 0; }
-.band :focus-visible { outline-color: var(--band-ink); }
-.band-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
-h1 { margin: 0; font-size: clamp(1.4rem, 5.6vw, 2.2rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.01em; }
-.lede { margin: 6px 0 0; color: var(--band-muted); font-size: 0.92rem; line-height: 1.4; max-width: 46ch; }
-
-.lang {
-  position: relative;
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 40px;
-  padding: 0 10px 0 12px;
-  border: 1px solid var(--chip-line);
-  border-radius: 999px;
-  font-size: 0.92rem;
+.app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(20px, 5vw, 48px) clamp(16px, 4vw, 24px) 56px;
 }
-.lang:focus-within { outline: 2px solid var(--band-ink); outline-offset: 2px; }
-.lang select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; font-size: 16px; cursor: pointer; }
-.lang select { color-scheme: light; color: #000; }
-.lang select option { color: #000; background: #fff; }
+h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 4.5vw, 2.5rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.lede { margin: 0.5rem 0 0; color: var(--muted); max-width: 52ch; }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.lang { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+.lang select { width: auto; min-width: 150px; color: var(--ink); }
 
+/* Grandeurs */
 .tabs {
-  --fl: 0px;
-  --fr: 28px;
   display: flex;
-  gap: 8px;
-  margin: 0 -16px;
-  padding: 2px 16px 16px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fl), #000 calc(100% - var(--fr)), transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 var(--fl), #000 calc(100% - var(--fr)), transparent 100%);
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 28px;
 }
-.tabs::-webkit-scrollbar { display: none; }
 .tab {
-  flex: none;
-  scroll-snap-align: center;
-  min-height: 42px;
-  padding: 0 16px;
-  border: 1px solid var(--chip-line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--band-ink);
-  font-size: 0.98rem;
+  appearance: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 12px;
+  min-height: 40px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
   white-space: nowrap;
 }
-.tab[aria-selected="true"] { background: var(--chip-on); border-color: var(--chip-on); color: var(--chip-on-ink); font-weight: 700; }
+.tab:hover { border-color: var(--accent); }
+.tab[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); font-weight: 700; }
 
-/* Règle graduée : les graduations pendent du bord du bandeau */
-.ruler {
+/* Panneau de conversion, bordé d’une règle graduée */
+.panel {
+  position: relative;
+  margin-top: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 36px clamp(14px, 3vw, 24px) 8px;
+}
+.panel::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
   height: 16px;
   background:
-    repeating-linear-gradient(90deg, var(--ruler) 0 1px, transparent 1px 40px) left top / 100% 16px no-repeat,
-    repeating-linear-gradient(90deg, var(--ruler) 0 1px, transparent 1px 8px) left top / 100% 7px no-repeat;
+    repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 40px) left top / 100% 16px no-repeat,
+    repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 8px) left top / 100% 7px no-repeat;
 }
+.qdesc { margin: 0 0 18px; color: var(--muted); max-width: 60ch; }
 
-/* Contenu */
-.app { max-width: 720px; margin: 0 auto; padding: 14px 16px 48px; }
-.qdesc { margin: 0 2px 14px; color: var(--muted); font-size: 0.92rem; max-width: 62ch; }
-
-/* Choix des unités : deux grandes cartes et un bouton d’inversion au centre */
-.pickers { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.pick {
-  position: relative;
+.selectors {
   display: grid;
-  gap: 1px;
-  align-content: center;
-  min-width: 0;
-  min-height: 92px;
-  padding: 10px 40px 10px 14px;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: end;
+}
+.field { display: grid; gap: 6px; font-weight: 600; font-size: 0.9rem; }
+select {
+  font: inherit;
+  font-weight: 400;
+  color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  overflow: hidden;
+  border-radius: 4px;
+  padding: 0 10px;
+  min-height: 46px;
+  width: 100%;
+  min-width: 0;
 }
-.swap + .pick { padding-left: 28px; }
-.pick:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; }
-.pick-cap { color: var(--muted); font-size: 0.78rem; }
-.pick-sym { display: block; font-size: 1.5rem; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pick-name { display: block; color: var(--muted); font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pick-chev { position: absolute; right: 16px; bottom: 16px; color: var(--muted); }
-.pick select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; font-size: 16px; cursor: pointer; }
 .swap {
-  position: absolute;
-  left: 50%; top: 50%;
-  z-index: 1;
+  width: 46px; height: 46px;
   display: grid; place-items: center;
-  width: 44px; height: 44px;
-  transform: translate(-50%, -50%);
   border: 1px solid var(--line);
-  border-radius: 50%;
+  border-radius: 4px;
   background: var(--surface);
   color: var(--ink);
+  cursor: pointer;
 }
 .swap:hover { border-color: var(--accent); color: var(--accent); }
-.hint { margin: 12px 2px 14px; color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; min-height: 1.4em; }
+.hint { margin: 14px 0 6px; color: var(--muted); font-size: 0.92rem; min-height: 1.4em; }
 
-/* Lignes de saisie et de résultat */
-.rows { display: grid; gap: 12px; }
-.line { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-.line.bad { border-color: var(--bad); }
-.in-cell { display: flex; align-items: center; gap: 6px; min-height: 64px; padding: 4px 16px 4px 6px; }
-.in-cell:focus-within { box-shadow: inset 0 0 0 2px var(--accent); }
-.sign {
-  flex: none;
-  width: 44px; height: 44px;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 0.95rem;
+/* Les trois lignes de conversion */
+.line { padding: 14px 0; border-top: 1px solid var(--line); }
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: stretch;
 }
-.sign:hover { background: var(--bg); color: var(--ink); }
-.in-cell input {
+.box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 60px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+}
+.box:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.box input {
   flex: 1;
   min-width: 0;
-  height: 56px;
-  padding: 0 4px;
+  height: 58px;
+  padding: 0;
   border: 0;
   outline: 0;
   background: transparent;
   color: var(--ink);
-  font-size: clamp(1.5rem, 6.5vw, 1.9rem);
-  font-weight: 500;
+  font: inherit;
+  font-size: clamp(1.3rem, 3.5vw, 1.7rem);
   font-variant-numeric: tabular-nums;
 }
-.in-cell input::placeholder { color: var(--muted); opacity: 0.7; }
-.u { flex: none; color: var(--muted); font-size: 1rem; white-space: nowrap; }
-.out-cell { display: flex; align-items: center; gap: 8px; min-height: 64px; padding: 10px 8px 10px 16px; background: var(--tint); }
-.out-cell output {
+.box input::placeholder { color: var(--muted); opacity: 0.7; }
+.u { color: var(--muted); font-size: 0.95rem; white-space: nowrap; }
+.res { background: var(--tint); border-color: transparent; }
+.res output {
   flex: 1;
   min-width: 0;
+  padding: 8px 0;
+  font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+  font-weight: 600;
+  line-height: 1.2;
   color: var(--accent);
-  font-size: clamp(1.4rem, 6vw, 1.9rem);
-  font-weight: 700;
-  line-height: 1.15;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
-.out-cell.empty output { color: var(--muted); font-weight: 400; }
-.out-u { color: var(--accent); opacity: 0.85; }
+.res.empty output { color: var(--muted); font-weight: 400; }
+.eq { align-self: center; color: var(--muted); font-size: 1.4rem; }
 .copy {
-  flex: none;
-  display: inline-flex; align-items: center; gap: 6px;
-  min-width: 44px; height: 44px;
-  padding: 0 12px;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--accent);
-  font-size: 0.9rem;
-}
-.copy:hover:not(:disabled) { background: var(--tint2); }
-.copy:disabled { opacity: 0.4; cursor: default; }
-.copy .i-ok { display: none; }
-.copy[data-state="ok"] { background: var(--accent); color: var(--on-accent); }
-.copy[data-state="ok"] .i-copy { display: none; }
-.copy[data-state="ok"] .i-ok { display: block; }
-.copy[data-state="fail"] { background: var(--bad); color: var(--surface); }
-.copy .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.copy[data-state="fail"] .lbl { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
-.note { margin: 0; padding: 8px 16px; background: var(--surface); border-top: 1px solid var(--line); color: var(--warn); font-size: 0.88rem; }
-.note:empty { display: none; }
-.line.bad .note { color: var(--bad); }
-
-/* Catalogue des unités */
-.catalog { margin-top: 24px; }
-.catalog summary {
-  display: flex; align-items: center; justify-content: space-between;
-  min-height: 48px;
-  padding: 0 6px 0 2px;
-  font-size: 1.05rem;
-  font-weight: 700;
-  list-style: none;
+  min-width: 84px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.92rem;
   cursor: pointer;
 }
-.catalog summary::-webkit-details-marker { display: none; }
-.catalog summary::after {
-  content: "";
-  width: 9px; height: 9px;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(45deg);
-  margin-bottom: 4px;
-}
-.catalog[open] summary::after { transform: rotate(-135deg); margin-bottom: -4px; }
-.cat-g { margin: 18px 2px 8px; color: var(--muted); font-size: 0.88rem; font-weight: 700; }
-.cat-l { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-.cat-i { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 12px 14px; border-top: 1px solid var(--line); }
-.cat-i:first-child { border-top: 0; }
-.cat-i.on { background: var(--tint); }
-.cat-h { grid-column: 1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; min-width: 0; }
-.cat-n { font-weight: 600; }
-.cat-s { color: var(--muted); }
-.cat-r { grid-column: 2; grid-row: 1 / span 2; display: flex; align-items: flex-start; gap: 6px; }
-.cat-u { grid-column: 1; color: var(--muted); font-size: 0.86rem; }
-.cat-e { grid-column: 1 / -1; margin-top: 2px; font-size: 0.88rem; font-variant-numeric: tabular-nums; }
-.pill {
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 0.8rem;
-}
-.pill[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
-.foot { margin: 22px 2px 0; color: var(--muted); font-size: 0.85rem; max-width: 62ch; }
-.band-side { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-.doc { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 6px; color: var(--band-muted); font-size: 0.88rem; text-decoration: underline; text-underline-offset: 3px; }
-.doc:hover { color: var(--band-ink); }
-.brand { min-width: 0; }
-h1 { font-size: clamp(1.3rem, 5.4vw, 2.2rem); overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; }
-.lang-code { display: none; font-weight: 600; letter-spacing: 0.03em; }
-@media (max-width: 479px) {
-  .lang-name { display: none; }
-  .lang-code { display: inline; }
-  .doc .fr { display: none; }
-}
+.copy:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.copy:disabled { opacity: 0.45; cursor: default; }
+.note { margin: 8px 0 0; font-size: 0.88rem; color: var(--warn); }
+.note:empty { display: none; }
+.bad .note { color: var(--bad); }
+.bad .in { border-color: var(--bad); }
 
-/* Grands écrans */
-@media (min-width: 700px) {
-  .line { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; background: transparent; border: 0; border-radius: 0; overflow: visible; }
-  .in-cell, .out-cell { min-height: 76px; border: 1px solid var(--line); border-radius: 14px; }
-  .in-cell { padding: 0 16px 0 8px; background: var(--surface); }
-  .out-cell { padding: 0 8px 0 16px; border-color: transparent; }
-  .line.bad .in-cell { border-color: var(--bad); }
-  .note { grid-column: 1 / -1; margin-top: -4px; padding: 0 4px; background: transparent; border-top: 0; }
-  .copy .lbl { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+/* Catalogue des unités */
+.catalog { margin-top: 28px; }
+.catalog summary {
+  display: flex; align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
 }
-@media (min-width: 760px) {
-  .tabs { flex-wrap: wrap; margin: 0; padding: 2px 0 18px; overflow: visible; -webkit-mask-image: none; mask-image: none; }
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 0.92rem; }
+th, td { text-align: left; padding: 8px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+thead th { border-top: 0; font-weight: 600; color: var(--muted); }
+tr.g th { background: var(--bg); color: var(--ink); font-weight: 700; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.on td { background: var(--tint); }
+.tag {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  white-space: nowrap;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .copy, .tab, .pill, .swap { transition: background-color 0.15s, border-color 0.15s, color 0.15s; }
+.foot { margin-top: 20px; color: var(--muted); font-size: 0.88rem; max-width: 62ch; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.box input:focus-visible { outline: 0; }
+
+@media (max-width: 640px) {
+  .selectors { grid-template-columns: 1fr; }
+  .swap { justify-self: center; transform: rotate(90deg); }
+  .row { grid-template-columns: minmax(0, 1fr) auto; }
+  .row .in { grid-column: 1 / -1; }
+  .eq { display: none; }
 }
 </style>
 </head>
 <body>
-<header>
-  <div class="band">
-    <div class="band-in">
-      <div class="band-top">
-        <div class="brand">
-          <h1 id="title">Convertisseur d’unités</h1>
-          <p class="lede" id="lede">Choisissez une grandeur et deux unités, puis saisissez jusqu’à trois valeurs à convertir.</p>
-        </div>
-        <div class="band-side">
-        <label class="lang">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg>
-          <span class="lang-name" id="langname">Français</span>
-          <span class="lang-code" id="langcode">FR</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-          <span class="sr" id="langlabel">Langue</span>
-          <select id="lang">
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
-            <option value="it">Italiano</option>
-            <option value="es">Español</option>
-            <option value="sv">Svenska</option>
-          </select>
-        </label>
-        <a class="doc" id="readme" href="README.md" target="_blank" rel="noopener" hreflang="fr" title="Documentation (README, en français)" aria-label="Documentation (README, en français)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>
-          <span>README<span class="fr" id="readme-lang"> (FR)</span></span>
-        </a>
-        </div>
-      </div>
-      <div class="tabs" role="tablist" aria-label="Grandeur physique" id="tabs"></div>
-    </div>
-  </div>
-  <div class="ruler" aria-hidden="true"></div>
-</header>
-
 <main class="app">
+  <header class="top">
+    <div>
+      <h1 id="title">Convertisseur d’unités</h1>
+      <p class="lede" id="lede">Choisissez une grandeur et deux unités, puis saisissez jusqu’à trois valeurs à convertir.</p>
+    </div>
+    <label class="lang">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg>
+      <span class="sr" id="langlabel">Langue</span>
+      <select id="lang">
+        <option value="fr">Français</option>
+        <option value="en">English</option>
+        <option value="de">Deutsch</option>
+        <option value="it">Italiano</option>
+        <option value="es">Español</option>
+        <option value="sv">Svenska</option>
+      </select>
+    </label>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Grandeur physique" id="tabs"></div>
+
   <section class="panel" id="panel" role="tabpanel">
     <p class="qdesc" id="qdesc"></p>
 
-    <div class="pickers">
-      <label class="pick">
-        <span class="pick-cap" id="lbl-from">Unité d’entrée</span>
-        <b class="pick-sym" id="pk-from-sym"></b>
-        <span class="pick-name" id="pk-from-name"></span>
-        <svg class="pick-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-        <select id="from"></select>
-      </label>
+    <div class="selectors">
+      <label class="field"><span id="lbl-from">Unité d’entrée</span><select id="from"></select></label>
       <button type="button" class="swap" id="swap" aria-label="Inverser l’unité d’entrée et l’unité de sortie" title="Inverser les unités">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 12 4 4-4 4"/><path d="M21 16H7"/></svg>
       </button>
-      <label class="pick">
-        <span class="pick-cap" id="lbl-to">Unité de sortie</span>
-        <b class="pick-sym" id="pk-to-sym"></b>
-        <span class="pick-name" id="pk-to-name"></span>
-        <svg class="pick-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-        <select id="to"></select>
-      </label>
+      <label class="field"><span id="lbl-to">Unité de sortie</span><select id="to"></select></label>
     </div>
 
     <p class="hint" id="hint"></p>
-    <div class="rows" id="rows"></div>
+    <div id="rows"></div>
   </section>
 
-  <details class="catalog" id="catalog" open>
+  <details class="catalog" open>
     <summary id="catsum">Unités disponibles</summary>
-    <div id="catbody"></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th id="th-unit">Unité</th><th id="th-sym">Symbole</th><th id="th-use">Usage</th><th id="thlast">Équivalent</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
   </details>
 
-  <p class="foot" id="foot"></p>
+  <p class="foot" id="foot">Les calculs s’exécutent dans votre navigateur : aucune donnée n’est envoyée et aucune ressource externe n’est chargée. Les facteurs sont exacts d’après les définitions internationales (1 in = 25,4 mm, 1 kgf = 9,806 65 N, etc.), sauf le Mach, pris dans l’atmosphère standard au niveau de la mer (15 °C). La calorie est la calorie internationale (4,1868 J). Pour les unités régionales (mu, rai, feddan, tola, etc.), la valeur retenue est la valeur légale ou conventionnelle actuelle.</p>
 </main>
 
 <script>
 "use strict";
 
 /* ---------- Données ---------- */
-/* README ouvert par le lien du bandeau : version française si la langue est le français, sinon version anglaise.
-   Remplacez par des URL complètes si les fichiers ne sont pas déposés à côté de la page. */
-const README_URL = { fr: "README.md", en: "README.en.md" };
 const PARSEC = 149597870700 * 648000 / Math.PI;
 const U = (id, name, sym, grp, use, f) => ({ id, name, sym, grp, use, f });
 const T = (id, name, sym, grp, use, toC, fromC, formula) => ({ id, name, sym, grp, use, toC, fromC, formula });
 
 const QUANTITIES = [
   {
-    key: "longueur", label: "Longueur", base: "m", from: "in", to: "cm",
+    key: "longueur", label: "Longueur", base: "m", from: "m", to: "ft",
     desc: "Unité SI : le mètre (m). Les unités anglo-saxonnes sont définies exactement à partir du mètre (1 in = 25,4 mm).",
     units: [
       U("nm", "nanomètre", "nm", "SI et multiples décimaux", "SI. Nanotechnologies, optique", 1e-9),
@@ -793,8 +690,6 @@ defLang("fr", {
     placeholder: "Valeur {n}",
     copy: "Copier",
     copied: "Copié",
-    sign: "Changer le signe",
-    readme: "Documentation (README, en français)",
     copyFail: "Copie impossible",
     tagIn: "entrée",
     tagOut: "sortie",
@@ -826,8 +721,6 @@ defLang("en", {
     placeholder: "Value {n}",
     copy: "Copy",
     copied: "Copied",
-    sign: "Toggle sign",
-    readme: "Documentation (README, in English)",
     copyFail: "Copy failed",
     tagIn: "input",
     tagOut: "output",
@@ -974,8 +867,6 @@ defLang("de", {
     placeholder: "Wert {n}",
     copy: "Kopieren",
     copied: "Kopiert",
-    sign: "Vorzeichen wechseln",
-    readme: "Dokumentation (README, auf Englisch)",
     copyFail: "Kopieren fehlgeschlagen",
     tagIn: "Eingabe",
     tagOut: "Ausgabe",
@@ -1123,8 +1014,6 @@ defLang("it", {
     placeholder: "Valore {n}",
     copy: "Copia",
     copied: "Copiato",
-    sign: "Cambia segno",
-    readme: "Documentazione (README, in inglese)",
     copyFail: "Copia non riuscita",
     tagIn: "ingresso",
     tagOut: "uscita",
@@ -1269,8 +1158,6 @@ defLang("es", {
     placeholder: "Valor {n}",
     copy: "Copiar",
     copied: "Copiado",
-    sign: "Cambiar signo",
-    readme: "Documentación (README, en inglés)",
     copyFail: "No se pudo copiar",
     tagIn: "entrada",
     tagOut: "salida",
@@ -1414,8 +1301,6 @@ defLang("sv", {
     placeholder: "Värde {n}",
     copy: "Kopiera",
     copied: "Kopierat",
-    sign: "Byt tecken",
-    readme: "Dokumentation (README, på engelska)",
     copyFail: "Kopieringen misslyckades",
     tagIn: "in",
     tagOut: "ut",
@@ -1550,7 +1435,6 @@ defLang("sv", {
 
 /* ---------- Utilitaires ---------- */
 let NF = new Intl.NumberFormat("fr-FR", { maximumSignificantDigits: 12 });
-let NF3 = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 3 });
 let DEC = ",";
 const NBSP = "\u00a0";
 
@@ -1565,18 +1449,6 @@ function fmtHTML(x) {
   return m + NBSP + "×" + NBSP + "10<sup>" + (n < 0 ? "−" : "") + Math.abs(n) + "</sup>";
 }
 
-/* Résultats : 3 décimales au maximum (notation scientifique pour les très petites et très grandes valeurs) */
-function fmtResult(x) {
-  if (!isFinite(x)) return "—";
-  if (x === 0) return "0";
-  const a = Math.abs(x);
-  if (a >= 5e-4 && a < 1e12) return NF3.format(x);
-  let [m, e] = x.toExponential(3).split("e");
-  m = m.replace(/\.?0+$/, "").replace(".", DEC);
-  const n = parseInt(e, 10);
-  return m + NBSP + "×" + NBSP + "10<sup>" + (n < 0 ? "−" : "") + Math.abs(n) + "</sup>";
-}
-
 function parseValue(s) {
   let t = s.replace(/[\s\u00a0\u202f\u2019']/g, "").replace(/[−–]/g, "-");
   const lc = t.lastIndexOf(","), ld = t.lastIndexOf(".");
@@ -1586,15 +1458,13 @@ function parseValue(s) {
   } else {
     t = t.replace(",", ".");
   }
-  if (t === "" || t === "-" || t === "+") return null;
+  if (t === "") return null;
   if (!/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(t)) return NaN;
   return Number(t);
 }
 
 function plain(x) {
-  const a = Math.abs(x);
-  const v = (a === 0 || (a >= 5e-4 && a < 1e12)) ? Number(x.toFixed(3)) : Number(x.toExponential(3));
-  return String(v).replace(".", DEC);
+  return String(Number(x.toPrecision(12))).replace(".", DEC);
 }
 
 function convert(q, from, to, v) {
@@ -1628,12 +1498,18 @@ function load() {
   try {
     const s = JSON.parse(localStorage.getItem(STORE) || "null");
     if (!s || typeof s !== "object") return;
+    if (QUANTITIES.some(q => q.key === s.q)) state.q = s.q;
     if (typeof s.lang === "string" && LANGS[s.lang]) state.lang = s.lang;
-    /* La page s'ouvre toujours sur Longueur (in vers cm) : seule la langue est restauree. */
+    for (const q of QUANTITIES) {
+      const x = s.sel && s.sel[q.key];
+      if (x && q.units.some(u => u.id === x.from) && q.units.some(u => u.id === x.to)) {
+        state.sel[q.key] = { from: x.from, to: x.to };
+      }
+    }
   } catch (e) { /* stockage indisponible : on garde les valeurs par défaut */ }
 }
 function save() {
-  try { localStorage.setItem(STORE, JSON.stringify({ lang: state.lang })); } catch (e) { /* ignoré */ }
+  try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { /* ignoré */ }
 }
 
 const cur = () => QUANTITIES.find(q => q.key === state.q);
@@ -1663,7 +1539,7 @@ function units() {
 const $ = s => document.querySelector(s);
 const tabsEl = $("#tabs"), panel = $("#panel"), qdesc = $("#qdesc");
 const selFrom = $("#from"), selTo = $("#to"), hintEl = $("#hint"), rowsEl = $("#rows");
-const catBody = $("#catbody"), catSum = $("#catsum"), catEl = $("#catalog");
+const tbody = $("#tbody"), thLast = $("#thlast"), catSum = $("#catsum");
 
 /* Onglets des grandeurs */
 const tabBtns = QUANTITIES.map(q => {
@@ -1690,66 +1566,39 @@ tabsEl.addEventListener("keydown", e => {
   tabBtns[i].focus();
 });
 
-/* Défilement des grandeurs : fondu aux bords */
-function updateTabFade() {
-  const el = tabsEl, max = el.scrollWidth - el.clientWidth;
-  el.style.setProperty("--fl", el.scrollLeft > 4 ? "28px" : "0px");
-  el.style.setProperty("--fr", el.scrollLeft < max - 4 ? "28px" : "0px");
-}
-tabsEl.addEventListener("scroll", updateTabFade, { passive: true });
-window.addEventListener("resize", updateTabFade);
-
 /* Trois lignes de conversion */
-const ICON_COPY = '<svg class="i-copy" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
-const ICON_OK = '<svg class="i-ok" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>';
-
-function setCopyState(r, st) {
-  r.copy.dataset.state = st;
-  const label = st === "ok" ? ui("copied") : st === "fail" ? ui("copyFail") : ui("copy");
-  r.copyLbl.textContent = label;
-  r.copy.setAttribute("aria-label", label);
-}
-
 const rows = [0, 1, 2].map(i => {
   const el = document.createElement("div");
   el.className = "line";
   el.innerHTML =
-    '<div class="in-cell">' +
-      '<button type="button" class="sign">+/−</button>' +
-      '<input type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false">' +
-      '<span class="u in-u"></span>' +
-    '</div>' +
-    '<div class="out-cell empty">' +
-      '<output>–</output><span class="u out-u"></span>' +
-      '<button type="button" class="copy" disabled>' + ICON_COPY + ICON_OK + '<span class="lbl"></span></button>' +
+    '<div class="row">' +
+      '<label class="box in"><span class="sr">Valeur ' + (i + 1) + ' à convertir</span>' +
+        '<input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Valeur ' + (i + 1) + '">' +
+        '<span class="u in-u"></span></label>' +
+      '<span class="eq" aria-hidden="true">=</span>' +
+      '<div class="box res empty"><output>–</output><span class="u out-u"></span></div>' +
+      '<button type="button" class="copy" disabled>Copier</button>' +
     '</div>' +
     '<p class="note" role="status"></p>';
   rowsEl.appendChild(el);
   const r = {
     el,
     input: el.querySelector("input"),
-    sign: el.querySelector(".sign"),
     inU: el.querySelector(".in-u"),
-    res: el.querySelector(".out-cell"),
+    res: el.querySelector(".res"),
     out: el.querySelector("output"),
     outU: el.querySelector(".out-u"),
     note: el.querySelector(".note"),
     copy: el.querySelector(".copy"),
-    copyLbl: el.querySelector(".copy .lbl"),
     value: null
   };
-  r.input.value = String(i + 1);
+  if (i === 0) r.input.value = "1";
   r.input.addEventListener("input", update);
-  r.sign.addEventListener("click", () => {
-    const v = r.input.value.trim();
-    r.input.value = /^[-\u2212]/.test(v) ? v.slice(1) : "-" + v;
-    update();
-  });
   r.copy.addEventListener("click", async () => {
     if (r.value === null) return;
     const ok = await copyText(plain(r.value));
-    setCopyState(r, ok ? "ok" : "fail");
-    setTimeout(() => setCopyState(r, "idle"), 1400);
+    r.copy.textContent = ok ? ui("copied") : ui("copyFail");
+    setTimeout(() => { r.copy.textContent = ui("copy"); }, 1400);
   });
   return r;
 });
@@ -1775,27 +1624,19 @@ function fillSelect(sel, q, value) {
 
 function renderTable() {
   const q = cur();
+  thLast.textContent = q.temp ? ui("thFormula") : ui("thEquiv", { base: q.base });
   catSum.textContent = ui("catalog", { n: q.units.length });
   let html = "", grp = null;
   q.units.forEach(u => {
     if (u.grp !== grp) {
-      if (grp !== null) html += "</ul>";
-      html += '<h3 class="cat-g">' + gName(q, u) + '</h3><ul class="cat-l">';
+      html += '<tr class="g"><th colspan="4" scope="colgroup">' + gName(q, u) + "</th></tr>";
       grp = u.grp;
     }
     const last = q.temp ? u.formula.replace(/,/g, DEC) : "1" + NBSP + uSym(q, u) + " = " + fmtHTML(u.f) + NBSP + q.base;
-    const nm = uName(q, u);
-    html += '<li class="cat-i" data-id="' + u.id + '">' +
-      '<div class="cat-h"><span class="cat-n">' + nm + '</span><span class="cat-s">' + uSym(q, u) + '</span></div>' +
-      '<div class="cat-r">' +
-        '<button type="button" class="pill" data-role="from" data-id="' + u.id + '" aria-label="' + ui("tagIn") + " : " + nm + '">' + ui("tagIn") + '</button>' +
-        '<button type="button" class="pill" data-role="to" data-id="' + u.id + '" aria-label="' + ui("tagOut") + " : " + nm + '">' + ui("tagOut") + '</button>' +
-      '</div>' +
-      '<div class="cat-u">' + uUse(q, u) + '</div>' +
-      '<div class="cat-e">' + last + '</div>' +
-    '</li>';
+    html += '<tr data-id="' + u.id + '"><td>' + uName(q, u) + '<span class="tag-slot"></span></td><td>' + uSym(q, u) +
+            "</td><td>" + uUse(q, u) + '</td><td class="num">' + last + "</td></tr>";
   });
-  catBody.innerHTML = html + "</ul>";
+  tbody.innerHTML = html;
 }
 
 function renderSelection() {
@@ -1803,10 +1644,6 @@ function renderSelection() {
   panel.setAttribute("aria-labelledby", "tab-" + q.key);
 
   const fs = uSym(q, from), ts = uSym(q, to);
-  $("#pk-from-sym").textContent = fs;
-  $("#pk-from-name").textContent = uName(q, from);
-  $("#pk-to-sym").textContent = ts;
-  $("#pk-to-name").textContent = uName(q, to);
   rows.forEach(r => { r.inU.textContent = fs; r.outU.textContent = ts; });
 
   if (q.temp) {
@@ -1816,11 +1653,11 @@ function renderSelection() {
     hintEl.innerHTML = "1" + NBSP + fs + " = " + fmtHTML(from.f / to.f) + NBSP + ts;
   }
 
-  catBody.querySelectorAll(".cat-i").forEach(li => {
-    const id = li.dataset.id, isFrom = id === from.id, isTo = id === to.id;
-    li.classList.toggle("on", isFrom || isTo);
-    li.querySelector('[data-role="from"]').setAttribute("aria-pressed", isFrom ? "true" : "false");
-    li.querySelector('[data-role="to"]').setAttribute("aria-pressed", isTo ? "true" : "false");
+  tbody.querySelectorAll("tr[data-id]").forEach(tr => {
+    const id = tr.dataset.id, slot = tr.querySelector(".tag-slot");
+    const isFrom = id === from.id, isTo = id === to.id;
+    tr.classList.toggle("on", isFrom || isTo);
+    slot.innerHTML = (isFrom ? '<span class="tag">' + ui("tagIn") + "</span>" : "") + (isTo ? '<span class="tag">' + ui("tagOut") + "</span>" : "");
   });
 }
 
@@ -1851,7 +1688,7 @@ function update() {
         r.note.textContent = ui("errRange");
       } else {
         r.value = res;
-        setOut(r, fmtResult(res), false);
+        setOut(r, fmtHTML(res), false);
         if (q.temp && from.toC(v) < -273.15 - 1e-9) {
           r.note.textContent = ui("errAbsZero");
         }
@@ -1869,12 +1706,6 @@ function setQuantity(key) {
     b.setAttribute("aria-selected", on ? "true" : "false");
     b.tabIndex = on ? 0 : -1;
   });
-  const activeTab = tabBtns[QUANTITIES.indexOf(q)];
-  if (activeTab.scrollIntoView) {
-    const calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    activeTab.scrollIntoView({ inline: "center", block: "nearest", behavior: calm ? "auto" : "smooth" });
-  }
-  updateTabFade();
   qdesc.textContent = qDesc(q);
   fillSelect(selFrom, q, s.from);
   fillSelect(selTo, q, s.to);
@@ -1901,18 +1732,10 @@ $("#swap").addEventListener("click", () => {
   onUnitChange();
 });
 
-catBody.addEventListener("click", e => {
-  const b = e.target.closest("button[data-role]");
-  if (!b) return;
-  (b.dataset.role === "from" ? selFrom : selTo).value = b.dataset.id;
-  onUnitChange();
-});
-
 const selLang = $("#lang");
 
 function applyLang() {
   NF = new Intl.NumberFormat(LG().locale, { maximumSignificantDigits: 12 });
-  NF3 = new Intl.NumberFormat(LG().locale, { maximumFractionDigits: 3 });
   DEC = NF.formatToParts(1.1).find(p => p.type === "decimal").value;
   document.documentElement.lang = state.lang;
   document.title = ui("title");
@@ -1925,22 +1748,15 @@ function applyLang() {
   $("#lbl-to").textContent = ui("toLabel");
   $("#swap").setAttribute("aria-label", ui("swap"));
   $("#swap").title = ui("swap");
-  $("#langname").textContent = LG().name;
-  $("#langcode").textContent = state.lang.toUpperCase();
+  $("#th-unit").textContent = ui("thUnit");
+  $("#th-sym").textContent = ui("thSym");
+  $("#th-use").textContent = ui("thUse");
   $("#foot").textContent = ui("foot");
-  $("#readme").setAttribute("aria-label", ui("readme"));
-  $("#readme").title = ui("readme");
-  const rd = state.lang === "fr" ? "fr" : "en";
-  $("#readme").href = README_URL[rd];
-  $("#readme").hreflang = rd;
-  $("#readme-lang").textContent = " (" + rd.toUpperCase() + ")";
   tabBtns.forEach((b, i) => { b.textContent = qLabel(QUANTITIES[i]); });
   rows.forEach((r, i) => {
-    r.input.setAttribute("aria-label", ui("valueN", { n: i + 1 }));
+    r.el.querySelector(".sr").textContent = ui("valueN", { n: i + 1 });
     r.input.placeholder = ui("placeholder", { n: i + 1 });
-    r.sign.setAttribute("aria-label", ui("sign"));
-    r.sign.title = ui("sign");
-    setCopyState(r, "idle");
+    r.copy.textContent = ui("copy");
   });
   setQuantity(state.q);
 }
@@ -1949,7 +1765,6 @@ selLang.addEventListener("change", () => {
   applyLang();
 });
 
-if (window.matchMedia && window.matchMedia("(max-width: 640px)").matches) catEl.open = false;
 load();
 applyLang();
 </script>

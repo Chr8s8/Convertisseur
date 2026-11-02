@@ -72,7 +72,7 @@ Les unités sont regroupées par système ou par région (SI et multiples, État
 ## Fonctionnement des calculs
 
 - **Unités linéaires** : `résultat = valeur × facteur_entrée / facteur_sortie`, où le facteur est la valeur de l’unité dans l’unité de référence du tableau ci-dessus.
-- **Température** : la conversion passe par le degré Celsius (fonctions `toC` et `fromC` de chaque échelle). Une valeur inférieure au zéro absolu déclenche un avertissement, mais le calcul est tout de même effectué.
+- **Température** : la conversion passe par le degré Celsius (fonctions `toC` et `fromC` de chaque échelle). Une valeur inférieure au zéro absolu déclenche un avertissement, mais le calcul est tout de même effectué. Les résidus d’arrondi de l’ordre de 10⁻¹³ sont ramenés à 0 : le zéro absolu saisi dans une échelle donne bien `0` dans une autre, et non `5,684 × 10⁻¹⁴`.
 - **Précision de calcul** : arithmétique en virgule flottante double précision (IEEE 754).
 - **Affichage des résultats** : **3 décimales au maximum**, sans zéros inutiles (`200` et non `200,000`). Les valeurs inférieures à 0,0005 ou supérieures ou égales à 10¹² passent en notation scientifique, avec 3 décimales au maximum sur la mantisse (par exemple `1 × 10⁻⁹` pour 1 nm en mètres), afin d’éviter d’afficher un faux zéro.
 - **Facteurs de référence** : la ligne d’équivalence sous les cartes d’unités (« 1 ft = 0,3048 m ») et la colonne d’équivalents du catalogue conservent toute leur précision (12 chiffres significatifs). Ils ne sont pas limités à 3 décimales.
